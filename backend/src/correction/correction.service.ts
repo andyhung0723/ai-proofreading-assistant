@@ -61,7 +61,7 @@ export class CorrectionService {
   }
 
   private _buildTranslateSystemPrompt(): string {
-    const promptPath = join(__dirname, 'prompts', 'fix-text-system.prompt.md');
+    const promptPath = join(__dirname, 'prompts', 'translate-system.prompt.md');
     const prompt = readFileSync(promptPath, 'utf-8');
 
     return prompt;
