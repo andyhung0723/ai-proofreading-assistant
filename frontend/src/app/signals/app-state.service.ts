@@ -3,7 +3,7 @@ import { diffChars } from 'diff';
 import { AppStatus, DiffChange } from '../models/correction.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AppStateService {
   // Signals

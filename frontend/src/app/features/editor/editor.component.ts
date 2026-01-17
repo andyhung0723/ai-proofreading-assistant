@@ -3,9 +3,9 @@ import { Component, inject } from '@angular/core';
 import { AppStateService } from '../../signals/app-state.service';
 
 @Component({
-    selector: 'app-editor',
-    imports: [CommonModule],
-    templateUrl: './editor.component.html'
+  selector: 'app-editor',
+  imports: [CommonModule],
+  templateUrl: './editor.component.html',
 })
 export class EditorComponent {
   public readonly state = inject(AppStateService);

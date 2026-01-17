@@ -5,9 +5,9 @@ import { CorrectionApiService } from '../../core/services/correction-api.service
 import { AppStateService } from '../../signals/app-state.service';
 
 @Component({
-    selector: 'app-toolbar',
-    imports: [CommonModule],
-    templateUrl: './toolbar.component.html'
+  selector: 'app-toolbar',
+  imports: [CommonModule],
+  templateUrl: './toolbar.component.html',
 })
 export class ToolbarComponent {
   public readonly state = inject(AppStateService);
@@ -21,10 +21,12 @@ export class ToolbarComponent {
     this.state.setAppStatus('correcting');
 
     try {
-      const response = await firstValueFrom(this.api.fixText({
-        text: this.state.originalText(),
-        customInstruction: this.state.customInstruction() || undefined
-      }));
+      const response = await firstValueFrom(
+        this.api.fixText({
+          text: this.state.originalText(),
+          customInstruction: this.state.customInstruction() || undefined,
+        }),
+      );
 
       if (response) {
         this.state.setCorrectedText(response.correctedText);
@@ -43,9 +45,11 @@ export class ToolbarComponent {
     }
 
     try {
-      const response = await firstValueFrom(this.api.translateText({
-        finalText: this.state.finalText()
-      }));
+      const response = await firstValueFrom(
+        this.api.translateText({
+          finalText: this.state.finalText(),
+        }),
+      );
 
       if (response) {
         this.state.setTranslatedText(response.translatedText);

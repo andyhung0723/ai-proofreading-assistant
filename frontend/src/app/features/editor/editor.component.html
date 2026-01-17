@@ -1,76 +1,98 @@
 <div class="h-full p-6 overflow-auto">
   <!-- 輸入模式 -->
-  <div *ngIf="state.appStatus() === 'input'" class="space-y-4">
-    <div>
-      <label class="block text-sm font-medium text-gray-700 mb-2">
-        輸入逐字稿文本
-      </label>
-      <textarea
-        [value]="state.originalText()"
-        (input)="onTextInput($event)"
-        class="w-full h-64 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-        placeholder="請輸入需要校正的逐字稿文本（最多 1000 字）..."
-      ></textarea>
-    </div>
+  @if (state.appStatus() === 'input') {
+    <div class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          輸入逐字稿文本
+        </label>
+        <textarea
+          [value]="state.originalText()"
+          (input)="onTextInput($event)"
+          class="w-full h-64 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+          placeholder="請輸入需要校正的逐字稿文本（最多 1000 字）..."
+        ></textarea>
+      </div>
 
-    <div>
-      <label class="block text-sm font-medium text-gray-700 mb-2">
-        自訂校正指示（選填）
-      </label>
-      <textarea
-        [value]="state.customInstruction()"
-        (input)="onCustomInstructionInput($event)"
-        class="w-full h-24 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-        placeholder="例如：保持專有名詞大小寫、注意特定領域術語等..."
-      ></textarea>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          自訂校正指示（選填）
+        </label>
+        <textarea
+          [value]="state.customInstruction()"
+          (input)="onCustomInstructionInput($event)"
+          class="w-full h-24 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+          placeholder="例如：保持專有名詞大小寫、注意特定領域術語等..."
+        ></textarea>
+      </div>
     </div>
-  </div>
+  }
 
   <!-- 校正中模式 -->
-  <div *ngIf="state.appStatus() === 'correcting'" class="flex flex-col items-center justify-center h-64">
-    <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600"></div>
-    <p class="mt-4 text-gray-600">AI 正在校正中，請稍候...</p>
-  </div>
+  @if (state.appStatus() === 'correcting') {
+    <div class="flex flex-col items-center justify-center h-64">
+      <div
+        class="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600"
+      ></div>
+      <p class="mt-4 text-gray-600">AI 正在校正中,請稍候...</p>
+    </div>
+  }
 
   <!-- 審閱模式和翻譯完成模式 -->
-  <div *ngIf="state.appStatus() === 'review' || state.appStatus() === 'translated'" class="space-y-6">
-    <!-- Diff 顯示 -->
-    <div>
-      <h3 class="text-lg font-semibold text-gray-800 mb-3">校正結果（點擊接受或拒絕變更）</h3>
-      <div class="p-6 bg-gray-50 rounded-lg border border-gray-200 leading-relaxed">
-        <span *ngFor="let change of state.diffChanges(); let i = index">
-          <span
-            *ngIf="change.removed"
-            [class.diff-removed]="isChangeAccepted(i)"
-            [class.opacity-50]="!isChangeAccepted(i)"
-            [class.cursor-pointer]="true"
-            class="px-1 transition-opacity"
-            (click)="toggleChange(i)"
-            title="點擊切換保留/刪除"
-          >{{ change.value }}</span>
-          <span
-            *ngIf="change.added"
-            [class.diff-added]="isChangeAccepted(i)"
-            [class.opacity-50]="!isChangeAccepted(i)"
-            [class.cursor-pointer]="true"
-            class="px-1 transition-opacity"
-            (click)="toggleChange(i)"
-            title="點擊切換接受/拒絕"
-          >{{ change.value }}</span>
-          <span *ngIf="!change.added && !change.removed">{{ change.value }}</span>
-        </span>
+  @if (state.appStatus() === 'review' || state.appStatus() === 'translated') {
+    <div class="space-y-6">
+      <!-- Diff 顯示 -->
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 mb-3">
+          校正結果（點擊接受或拒絕變更）
+        </h3>
+        <div
+          class="p-6 bg-gray-50 rounded-lg border border-gray-200 leading-relaxed"
+        >
+          @for (change of state.diffChanges(); track $index; let i = $index) {
+            <span>
+              @if (change.removed) {
+                <span
+                  [class.diff-removed]="isChangeAccepted(i)"
+                  [class.opacity-50]="!isChangeAccepted(i)"
+                  [class.cursor-pointer]="true"
+                  class="px-1 transition-opacity"
+                  (click)="toggleChange(i)"
+                  title="點擊切換保留/刪除"
+                  >{{ change.value }}</span
+                >
+              }
+              @if (change.added) {
+                <span
+                  [class.diff-added]="isChangeAccepted(i)"
+                  [class.opacity-50]="!isChangeAccepted(i)"
+                  [class.cursor-pointer]="true"
+                  class="px-1 transition-opacity"
+                  (click)="toggleChange(i)"
+                  title="點擊切換接受/拒絕"
+                  >{{ change.value }}</span
+                >
+              }
+              @if (!change.added && !change.removed) {
+                <span>{{ change.value }}</span>
+              }
+            </span>
+          }
+        </div>
+        <p class="text-sm text-gray-500 mt-2">
+          提示：紅色刪除線表示將被刪除的內容，綠色底線表示新增的內容。點擊可切換接受或拒絕。
+        </p>
       </div>
-      <p class="text-sm text-gray-500 mt-2">
-        提示：紅色刪除線表示將被刪除的內容，綠色底線表示新增的內容。點擊可切換接受或拒絕。
-      </p>
-    </div>
 
-    <!-- 定稿預覽 -->
-    <div>
-      <h3 class="text-lg font-semibold text-gray-800 mb-3">定稿預覽</h3>
-      <div class="p-6 bg-white rounded-lg border border-gray-300 leading-relaxed whitespace-pre-wrap">
-        {{ state.finalText() }}
+      <!-- 定稿預覽 -->
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 mb-3">定稿預覽</h3>
+        <div
+          class="p-6 bg-white rounded-lg border border-gray-300 leading-relaxed whitespace-pre-wrap"
+        >
+          {{ state.finalText() }}
+        </div>
       </div>
     </div>
-  </div>
+  }
 </div>
