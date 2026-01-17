@@ -1,0 +1,9 @@
+/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .diff-added { @apply text-diff-added underline; }
+  .diff-removed { @apply text-diff-removed line-through; }
+}
