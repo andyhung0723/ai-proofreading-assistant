@@ -3,10 +3,9 @@ import { Component, computed, inject } from '@angular/core';
 import { AppStateService } from '../../signals/app-state.service';
 
 @Component({
-  selector: 'app-side-panel',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './side-panel.component.html',
+    selector: 'app-side-panel',
+    imports: [CommonModule],
+    templateUrl: './side-panel.component.html'
 })
 export class SidePanelComponent {
   public readonly state = inject(AppStateService);

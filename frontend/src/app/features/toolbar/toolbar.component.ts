@@ -5,10 +5,9 @@ import { CorrectionApiService } from '../../core/services/correction-api.service
 import { AppStateService } from '../../signals/app-state.service';
 
 @Component({
-  selector: 'app-toolbar',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './toolbar.component.html'
+    selector: 'app-toolbar',
+    imports: [CommonModule],
+    templateUrl: './toolbar.component.html'
 })
 export class ToolbarComponent {
   public readonly state = inject(AppStateService);
